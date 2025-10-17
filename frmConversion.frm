@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} frmConversion 
    Caption         =   "UserForm2"
-   ClientHeight    =   9648
-   ClientLeft      =   -24
+   ClientHeight    =   10875
+   ClientLeft      =   -30
    ClientTop       =   -60
-   ClientWidth     =   16320
+   ClientWidth     =   20640
    OleObjectBlob   =   "frmConversion.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -779,6 +779,26 @@ Private extensionDetectee As String
 
 
 
+Private Sub Label2_Click()
+
+End Sub
+
+Private Sub FrameExtension_Click()
+
+End Sub
+
+Private Sub FrameFormatage_Click()
+
+End Sub
+
+Private Sub optANSI_Click()
+
+End Sub
+
+Private Sub optWindows_Click()
+
+End Sub
+
 Private Sub UserForm_Initialize()
     ' Initialisation du formulaire
     Me.Caption = "Conversion de fichier"
@@ -877,21 +897,21 @@ Public Sub DetecterParametresFichier()
         '.TextAlign = fmTextAlignLeft
     End With
 
-    With lblEncodageActuel
-        .Caption = "Encodage actuel : " & encodageDetecte
-'        .Font.Size = 10
-'        .Font.Bold = False
-        .ForeColor = RGB(0, 51, 102)
-        .BackColor = RGB(230, 245, 255) ' Bleu clair dégradé
-        .BorderStyle = fmBorderStyleSingle
-        .BorderColor = RGB(100, 150, 200)
-        .SpecialEffect = fmSpecialEffectFlat
-'        ' Couleur spéciale si UTF-8
-'        If UCase(encodageDetecte) Like "UTF-8*" Then
-'            .BackColor = RGB(200, 255, 200) ' Vert clair pour UTF-8
-'            .ForeColor = RGB(0, 100, 0) ' Vert foncé
-'        End If
-    End With
+'    With lblEncodageActuel
+'        .Caption = "Encodage actuel : " & encodageDetecte
+''        .Font.Size = 10
+''        .Font.Bold = False
+'        .ForeColor = RGB(0, 51, 102)
+'        .BackColor = RGB(230, 245, 255) ' Bleu clair dégradé
+'        .BorderStyle = fmBorderStyleSingle
+'        .BorderColor = RGB(100, 150, 200)
+'        .SpecialEffect = fmSpecialEffectFlat
+''        ' Couleur spéciale si UTF-8
+''        If UCase(encodageDetecte) Like "UTF-8*" Then
+''            .BackColor = RGB(200, 255, 200) ' Vert clair pour UTF-8
+''            .ForeColor = RGB(0, 100, 0) ' Vert foncé
+''        End If
+'    End With
 
     With lblFormatageActuel
         .Caption = "Formatage actuel : " & formatageDetecte
@@ -978,8 +998,24 @@ Private Function DetecterEncodage(fichier As String) As String
     Close #fichierNum
 
     ' Si pas de BOM, considérer comme ANSI
-    DetecterEncodage = "ANSI"
-    Exit Function
+    Dim contenu As String, b As Byte, isPureAscii As Boolean
+    isPureAscii = True
+    
+    Do While Not EOF(fichierNum)
+        Get #fichierNum, , b
+        If b > 127 Then isPureAscii = False: Exit Do
+    Loop
+    Close #fichierNum
+    
+    If isPureAscii Then
+        DetecterEncodage = "ANSI"
+    Else
+        DetecterEncodage = "UTF-8"  ' UTF-8 sans BOM probable
+    End If
+
+
+'    DetecterEncodage = "ANSI"
+'    Exit Function
 'Private Function DetecterEncodageAmeliore(fichier As String) As String
 '    ' Fonction ultra-robuste pour détecter UTF-8
 '    Dim adoStream As Object
